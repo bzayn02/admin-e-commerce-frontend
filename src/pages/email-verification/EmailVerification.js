@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Alert, Spinner } from 'react-bootstrap';
 import { userEmailVerification } from '../register/userAction';
 
-export const EmailVerification = () => {
+const EmailVerification = () => {
   const dispatch = useDispatch();
 
   const params = new URLSearchParams(useLocation().search);
@@ -35,3 +35,5 @@ export const EmailVerification = () => {
     </div>
   );
 };
+
+export default EmailVerification;

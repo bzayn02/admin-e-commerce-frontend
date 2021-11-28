@@ -1,14 +1,14 @@
 import React from 'react';
 import { AdminLayout } from '../layout/AdminLayout';
 
-const Dashboard = () => {
+const Customer = () => {
   return (
     <div>
       <AdminLayout>
-        <h2>Dashboard Page</h2>
+        <h2>Customer Page</h2>
       </AdminLayout>
     </div>
   );
 };
 
-export default Dashboard;
+export default Customer;

@@ -1,12 +1,12 @@
 /* ================= Registration Page =================== */
 
-.register-page{
-
+a {
+  text-decoration: none;
 }
 
-.reg-form{
-    width:500px;
-    margin: auto;
-    margin-top: 20vh;
-    box-shadow: -5px 5px 5px 5px rgb(95, 94, 94);
+.reg-form {
+  width: 500px;
+  margin: auto;
+  margin-top: 20vh;
+  box-shadow: -5px 5px 5px 5px rgb(95, 94, 94);
 }
