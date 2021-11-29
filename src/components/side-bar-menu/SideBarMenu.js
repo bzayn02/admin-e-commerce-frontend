@@ -26,7 +26,7 @@ export const SideBarMenu = () => {
           </li>
           <li>
             <Link className="menu-item" to="/products">
-              <i class="fa-solid fa-gift"></i>
+              <i className="fa-solid fa-gift"></i>
               Products
             </Link>
           </li>
