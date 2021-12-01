@@ -3,22 +3,31 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isLoading: false,
   categoryResponse: {},
+  categories: [],
 };
 
 const categorySlice = createSlice({
   name: 'category',
   initialState,
   reducers: {
-    requestPending: (state) => {
+    catRequestPending: (state) => {
       state.isLoading = true;
     },
     catRespSuccess: (state, { payload }) => {
-      state.isLoading = true;
+      state.isLoading = false;
       state.categoryResponse = payload;
     },
+    fetchCatRespSuccess: (state, { payload }) => {
+      state.isLoading = false;
+      state.categories = payload;
+    },
+    catRespReset: (state) => {
+      state.isLoading = false;
+      state.categoryResponse = {};
+    },
 
-    requestFail: (state, { payload }) => {
-      state.isLoading = true;
+    catRequestFail: (state, { payload }) => {
+      state.isLoading = false;
       state.categoryResponse = payload;
     },
   },
@@ -27,4 +36,10 @@ const categorySlice = createSlice({
 const { reducer, actions } = categorySlice;
 
 export default reducer;
-export const { requestPending, catRespSuccess, requestFail } = actions;
+export const {
+  catRequestPending,
+  catRespSuccess,
+  fetchCatRespSuccess,
+  catRespReset,
+  catRequestFail,
+} = actions;

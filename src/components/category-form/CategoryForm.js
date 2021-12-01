@@ -1,14 +1,21 @@
-import { Button } from 'react-bootstrap';
+import { Alert, Button, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { createCat } from '../../pages/category/CategoryAction';
 
 const initialState = {
   name: '',
   parentCat: '',
 };
 export const CategoryForm = () => {
+  const dispatch = useDispatch();
+
   const [newCat, setNewCat] = useState(initialState);
 
+  const { isLoading, categoryResponse, categories } = useSelector(
+    (state) => state.category
+  );
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
@@ -20,11 +27,26 @@ export const CategoryForm = () => {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
+    if (!newCat.name) {
+      return alert('Please enter the category name');
+    }
+    dispatch(createCat(newCat));
   };
+  const parentCat = categories.filter((row) => !row.parentCat);
 
   console.log(newCat);
   return (
     <div>
+      {isLoading && <Spinner variant="primary" animation="border" />}
+      {categoryResponse?.message && (
+        <Alert
+          variant={
+            categoryResponse?.status === 'success' ? 'success' : 'danger'
+          }
+        >
+          {categoryResponse?.message}
+        </Alert>
+      )}
       <Form onSubmit={handleOnSubmit}>
         <Row>
           <Col>
@@ -41,9 +63,12 @@ export const CategoryForm = () => {
               aria-label="Default select example"
             >
               <option value="">Select parent category</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
+              {parentCat?.length &&
+                parentCat.map((row) => (
+                  <option key={row._id} value={row._id}>
+                    {row.name}
+                  </option>
+                ))}
             </Form.Select>
           </Col>
           <Col>
