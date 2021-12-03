@@ -12,11 +12,10 @@ export const CategoryList = () => {
   );
 
   useEffect(() => {
-    !categories.length && dispatch(fetchCat());
+    !categories?.length && dispatch(fetchCat());
 
-    return () => categoryResponse.status && dispatch(catRespReset());
-  }, [categories, categoryResponse, dispatch]);
-
+    return () => categoryResponse?.status && dispatch(catRespReset());
+  }, [categories, dispatch]);
   // parent cat only\
   const parentCat = categories.filter((row) => !row.parentCat);
   // child cat only
@@ -28,11 +27,8 @@ export const CategoryList = () => {
         {parentCat.length &&
           parentCat.map((row, i) => {
             return (
-              <div>
-                <ListGroup.Item
-                  key={row._id}
-                  className="d-flex justify-content-between"
-                >
+              <div key={row._id}>
+                <ListGroup.Item className="d-flex justify-content-between">
                   <span className="fs-5 bg-info p-1">{row.name}</span>
                   <span className="ml-4">
                     <Button variant="primary">Edit</Button>
@@ -51,7 +47,6 @@ export const CategoryList = () => {
                       className="d-flex justify-content-between"
                     >
                       <span>
-                        {' '}
                         {' ➥'}
                         {item.name}
                       </span>
