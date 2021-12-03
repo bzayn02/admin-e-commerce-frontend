@@ -3,7 +3,11 @@ import React, { useEffect } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCat, deleteCat } from '../../pages/category/CategoryAction';
-import { catRespReset } from '../../pages/category/CategorySlice';
+import {
+  catRespReset,
+  onCategorySelect,
+} from '../../pages/category/CategorySlice';
+import { EditCatForm } from '../category-form/EditCatForm';
 
 export const CategoryList = () => {
   const dispatch = useDispatch();
@@ -14,15 +18,31 @@ export const CategoryList = () => {
   useEffect(() => {
     !categories?.length && dispatch(fetchCat());
 
-    return () => categoryResponse?.status && dispatch(catRespReset());
-  }, [categories, dispatch]);
+    // return () => categoryResponse?.status && dispatch(catRespReset());
+  }, [dispatch]);
+
+  const handleOnEdit = (cat) => {
+    dispatch(onCategorySelect(cat));
+  };
+
   // parent cat only\
   const parentCat = categories.filter((row) => !row.parentCat);
   // child cat only
   const childCat = categories.filter((row) => row.parentCat);
 
+  const handleOnDelete = (_id) => {
+    const hasChildCategory = childCat.filter((item) => item.parentCat === _id);
+    if (hasChildCategory.length) {
+      return alert(
+        'This parent category has child category, please re-allocate child category to another parent category before deleting this category. '
+      );
+    }
+    dispatch(deleteCat(_id));
+  };
+
   return (
     <div>
+      <EditCatForm />
       <ListGroup>
         {parentCat.length &&
           parentCat.map((row, i) => {
@@ -31,10 +51,12 @@ export const CategoryList = () => {
                 <ListGroup.Item className="d-flex justify-content-between">
                   <span className="fs-5 bg-info p-1">{row.name}</span>
                   <span className="ml-4">
-                    <Button variant="primary">Edit</Button>
+                    <Button onClick={() => handleOnEdit(row)} variant="primary">
+                      Edit
+                    </Button>
                     <Button
                       variant="danger"
-                      onClick={() => dispatch(deleteCat(row._id))}
+                      onClick={() => handleOnDelete(row._id)}
                     >
                       Delete
                     </Button>
@@ -43,7 +65,7 @@ export const CategoryList = () => {
                 {childCat.map((item) =>
                   item.parentCat === row._id ? (
                     <ListGroup.Item
-                      key={row._id}
+                      key={item._id}
                       className="d-flex justify-content-between"
                     >
                       <span>
@@ -52,7 +74,12 @@ export const CategoryList = () => {
                       </span>
 
                       <span className="ml-4">
-                        <Button variant="primary">Edit</Button>
+                        <Button
+                          onClick={() => handleOnEdit(item)}
+                          variant="primary"
+                        >
+                          Edit
+                        </Button>
                         <Button
                           variant="danger"
                           onClick={() => dispatch(deleteCat(item._id))}

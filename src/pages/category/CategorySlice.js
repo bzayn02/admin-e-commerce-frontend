@@ -3,6 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isLoading: false,
   categoryResponse: {},
+  show: false,
+  selectedCategory: {},
   categories: [],
 };
 
@@ -25,7 +27,10 @@ const categorySlice = createSlice({
       state.isLoading = false;
       state.categoryResponse = {};
     },
-
+    onCategorySelect: (state, { payload }) => {
+      state.show = !state.show;
+      state.selectedCategory = payload || {};
+    },
     catRequestFail: (state, { payload }) => {
       state.isLoading = false;
       state.categoryResponse = payload;
@@ -41,5 +46,6 @@ export const {
   catRespSuccess,
   fetchCatRespSuccess,
   catRespReset,
+  onCategorySelect,
   catRequestFail,
 } = actions;
