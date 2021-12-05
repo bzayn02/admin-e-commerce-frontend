@@ -3,10 +3,7 @@ import React, { useEffect } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCat, deleteCat } from '../../pages/category/CategoryAction';
-import {
-  catRespReset,
-  onCategorySelect,
-} from '../../pages/category/CategorySlice';
+import { onCategorySelect } from '../../pages/category/CategorySlice';
 import { EditCatForm } from '../category-form/EditCatForm';
 
 export const CategoryList = () => {
@@ -16,7 +13,7 @@ export const CategoryList = () => {
   );
 
   useEffect(() => {
-    !categories?.length && dispatch(fetchCat());
+    dispatch(fetchCat());
 
     // return () => categoryResponse?.status && dispatch(catRespReset());
   }, [dispatch]);
@@ -31,6 +28,10 @@ export const CategoryList = () => {
   const childCat = categories.filter((row) => row.parentCat);
 
   const handleOnDelete = (_id) => {
+    if (!window.confirm('Are you sure you want to delete this category?')) {
+      return;
+    }
+
     const hasChildCategory = childCat.filter((item) => item.parentCat === _id);
     if (hasChildCategory.length) {
       return alert(
@@ -82,7 +83,7 @@ export const CategoryList = () => {
                         </Button>
                         <Button
                           variant="danger"
-                          onClick={() => dispatch(deleteCat(item._id))}
+                          onClick={() => handleOnDelete(item._id)}
                         >
                           Delete
                         </Button>

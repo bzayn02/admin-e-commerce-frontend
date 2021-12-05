@@ -1,5 +1,11 @@
-import { createUser, verifyNewUser } from '../../api/userAPI';
-import { requestPending, responseSuccess, requestFail } from './userSlice';
+import { createUser, verifyNewUser, loginUser } from '../../api/userAPI';
+import {
+  requestPending,
+  responseSuccess,
+  loginSuccess,
+  requestFail,
+  loginFail,
+} from './userSlice';
 
 export const userRegister = (newUser) => async (dispatch) => {
   console.log(newUser);
@@ -22,4 +28,16 @@ export const userEmailVerification = (userObj) => async (dispatch) => {
   result?.status === 'success'
     ? dispatch(responseSuccess(result))
     : dispatch(requestFail(result));
+};
+
+export const adminLogin = (loginInfo) => async (dispatch) => {
+  dispatch(requestPending());
+
+  //call api to login
+
+  const result = await loginUser(loginInfo);
+  if (result?.status === 'success') {
+    return dispatch(loginSuccess(result.user));
+  }
+  dispatch(loginFail(result));
 };

@@ -24,10 +24,20 @@ export const verifyNewUser = async (info) => {
     const { data } = await axios.patch(userAPI + '/email-verification', info);
     return data;
   } catch (error) {
-    console.log(error);
     return {
       status: 'error',
       message: error.message,
+    };
+  }
+};
+export const loginUser = async (info) => {
+  try {
+    const { data } = await axios.post(userAPI + '/login', info);
+    return data;
+  } catch (error) {
+    return {
+      status: 'error',
+      message: 'Invalid login details!',
     };
   }
 };
