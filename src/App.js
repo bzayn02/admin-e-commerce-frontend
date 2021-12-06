@@ -10,20 +10,35 @@ import Customer from './pages/customer/Customer';
 import Payment from './pages/payment/Payment';
 import Order from './pages/order/Order';
 import Dashboard from './pages/dashboard/Dashboard';
+import { PrivateRoute } from './components/private-route/PrivateRoute';
 
 function App() {
   return (
     <div>
       <Router>
         <Switch>
-          <Route path="/categories" children={<Category />} />
-          <Route path="/products" children={<Product />} />
-          <Route path="/orders" children={<Order />} />
-          <Route path="/customers" children={<Customer />} />
-          <Route path="/payments" children={<Payment />} />
-          <Route path="/dashboard" children={<Dashboard />} />
+          <PrivateRoute path="/dashboard">
+            <Dashboard />
+          </PrivateRoute>
+          <PrivateRoute path="/categories">
+            <Category />
+          </PrivateRoute>
+          <PrivateRoute path="/products">
+            <Product />
+          </PrivateRoute>
+          <PrivateRoute path="/orders">
+            <Order />
+          </PrivateRoute>
+          <PrivateRoute path="/customers">
+            <Customer />
+          </PrivateRoute>
+          <PrivateRoute path="/payments">
+            <Payment />
+          </PrivateRoute>
+
           <Route path="/email-verification" children={<EmailVerification />} />
           <Route path="/registration" children={<Register />} />
+
           <Route path="/" children={<Login />} />
           <Route path="*" children={<PageNotFound />} />
         </Switch>
