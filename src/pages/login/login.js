@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Card, Form, Spinner } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
-import { adminLogin } from '../admin-auth-slice/userAction';
+import { useHistory, useLocation } from 'react-router-dom';
+import { adminLogin, autoLogin } from '../admin-auth-slice/userAction';
 
 const initialState = {
   email: 'a@gmail.com',
@@ -11,15 +11,18 @@ const initialState = {
 const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { isLoggedIn, isPending, userLoginResp } = useSelector(
-    (state) => state.user
-  );
+  const location = useLocation();
+  const { isLoggedIn, isPending, isAutoLoginPending, userLoginResp } =
+    useSelector((state) => state.user);
 
   const [loginInfo, setLoginInfo] = useState(initialState);
 
+  const from = location?.state?.from?.pathname || '/dashboard';
   useEffect(() => {
-    isLoggedIn && history.push('/dashboard');
-  }, [isLoggedIn, history]);
+    !isLoggedIn && dispatch(autoLogin());
+
+    isLoggedIn && history.replace(from);
+  }, [isLoggedIn, history, dispatch, from]);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -31,13 +34,12 @@ const Login = () => {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    const { email, password } = loginInfo;
-    if (!email && !password) {
-      return alert('Please provide the login details to login.');
-    }
 
     dispatch(adminLogin(loginInfo));
   };
+  // if (isAutoLoginPending) {
+  //   return <Spinner variant="primary" animation="border" />;
+  // }
 
   return (
     <div className="register-page mb-5">

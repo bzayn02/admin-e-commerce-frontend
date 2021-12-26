@@ -1,8 +1,12 @@
 import React from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { useDispatch } from 'react-redux';
+import { userLogout } from '../../pages/admin-auth-slice/userAction';
 
 export const Header = () => {
+  const dispatch = useDispatch();
+
   return (
     <div>
       <Navbar collapseOnSelect bg="info" expand="md">
@@ -13,7 +17,13 @@ export const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <Nav.Link>Logout</Nav.Link>
+              <Nav.Link
+                onClick={() => {
+                  dispatch(userLogout());
+                }}
+              >
+                Logout
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
