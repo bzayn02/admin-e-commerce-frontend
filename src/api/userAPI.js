@@ -41,3 +41,14 @@ export const loginUser = async (info) => {
     };
   }
 };
+export const logoutUser = async (tokens) => {
+  try {
+    const { data } = await axios.post(userAPI + '/logout', tokens);
+    return data;
+  } catch (error) {
+    return {
+      status: 'error',
+      message: 'Error, there is problem logging out. Please try again later!',
+    };
+  }
+};

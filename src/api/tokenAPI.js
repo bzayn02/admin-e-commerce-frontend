@@ -16,3 +16,16 @@ export const getNewAccessJWT = async () => {
     console.log(error);
   }
 };
+
+export const updateNewAccessJWT = async () => {
+  try {
+    window.sessionStorage.removeItem('accessJWT');
+    const { accessJWT } = await getNewAccessJWT();
+    if (accessJWT) {
+      window.sessionStorage.setItem('accessJWT', accessJWT);
+    }
+    return window.sessionStorage.getItem('accessJWT');
+  } catch (error) {
+    return false;
+  }
+};

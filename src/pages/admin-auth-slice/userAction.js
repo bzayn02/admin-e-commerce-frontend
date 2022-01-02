@@ -1,4 +1,9 @@
-import { createUser, verifyNewUser, loginUser } from '../../api/userAPI';
+import {
+  createUser,
+  verifyNewUser,
+  loginUser,
+  logoutUser,
+} from '../../api/userAPI';
 import {
   requestPending,
   responseSuccess,
@@ -71,7 +76,10 @@ export const autoLogin = () => async (dispatch) => {
     dispatch(userLogout());
   }
 };
-export const userLogout = () => (dispatch) => {
+export const userLogout = () => async (dispatch) => {
+  const accessJWT = window.sessionStorage.getItem('accessJWT');
+  const refreshJWT = window.localStorage.getItem('refreshJWT');
+  await logoutUser({ accessJWT, refreshJWT });
   window.sessionStorage.removeItem('accessJWT');
   window.localStorage.removeItem('refreshJWT');
   dispatch(userLogoutSuccess());
