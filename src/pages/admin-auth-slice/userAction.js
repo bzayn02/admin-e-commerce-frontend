@@ -17,7 +17,6 @@ import {
 import { getNewAccessJWT } from '../../api/tokenAPI';
 
 export const userRegister = (newUser) => async (dispatch) => {
-  console.log(newUser);
   dispatch(requestPending());
 
   //call api
