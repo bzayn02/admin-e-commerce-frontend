@@ -4,7 +4,7 @@
 }
 
 .left {
-  width: 250px;
+  width: 300px;
   border-right: 3px solid grey;
   height: 100vh;
   position: fixed;
@@ -14,7 +14,7 @@
 
 .right {
   width: 100%;
-  margin-left: 250px;
+  margin-left: 300px;
 }
 
 .main {

@@ -9,6 +9,7 @@ import {
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { userRegister } from '../admin-auth-slice/userAction';
+import { AdminLayout } from '../layout/AdminLayout';
 const initialState = {
   fname: '',
   lname: '',
@@ -60,9 +61,9 @@ const Register = () => {
   };
 
   return (
-    <div className="register-page mb-5">
-      <Card className="p-3 reg-form">
-        <h2>Register new admin user</h2>
+    <AdminLayout>
+      <div className="register-page">
+        <h2>Register New Admin</h2>
         <hr />
         {isPending && <Spinner variant="primary" animation="border" />}
         {userRegisterResponse?.message && (
@@ -74,7 +75,7 @@ const Register = () => {
             {userRegisterResponse?.message}
           </Alert>
         )}
-        <Form className="mt-3" onSubmit={handleOnSubmit}>
+        <Form onSubmit={handleOnSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>First Name *</Form.Label>
             <Form.Control
@@ -143,10 +144,7 @@ const Register = () => {
               placeholder="i.e. 3 george st Sydney, nsw, 2000"
             />
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Gender</Form.Label>
-            <Form.Control name="fname" placeholder="sam smith" />
-          </Form.Group>
+
           <Form.Group className="mb-3">
             <Form.Label>Gender</Form.Label>
             <InputGroup>
@@ -160,19 +158,21 @@ const Register = () => {
               <InputGroup.Radio
                 name="gender"
                 onChange={handleOnChange}
-                aria-label="Male"
-                defaultValue="male"
+                aria-label="Female"
+                defaultValue="female"
+                className="ml-3"
               />
               Female
             </InputGroup>
           </Form.Group>
-
-          <Button type="submit" variant="primary">
-            Register
-          </Button>
+          <div className="d-grid gap-2">
+            <Button type="submit" variant="primary" size="lg">
+              Register
+            </Button>
+          </div>
         </Form>
-      </Card>
-    </div>
+      </div>
+    </AdminLayout>
   );
 };
 

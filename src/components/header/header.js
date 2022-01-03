@@ -20,6 +20,12 @@ export const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
+              <LinkContainer to="/admin-profile">
+                <Nav.Link>
+                  <i className="fa-solid fa-user-tie"></i>
+                </Nav.Link>
+              </LinkContainer>
+
               <Nav.Link onClick={handleOnLogout}>Logout</Nav.Link>
             </Nav>
           </Navbar.Collapse>

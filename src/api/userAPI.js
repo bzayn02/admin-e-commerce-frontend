@@ -30,6 +30,31 @@ export const verifyNewUser = async (info) => {
     };
   }
 };
+
+export const getUser = async () => {
+  try {
+    const { data } = await axios.get(userAPI, {
+      headers: {
+        authorization: window.sessionStorage.getItem('accessJWT'),
+      },
+    });
+    return data;
+  } catch (error) {
+    return error?.response?.data;
+  }
+};
+export const updateUserProfile = async (userInfo) => {
+  try {
+    const { data } = await axios.patch(userAPI, userInfo, {
+      headers: {
+        authorization: window.sessionStorage.getItem('accessJWT'),
+      },
+    });
+    return data;
+  } catch (error) {
+    return error?.response?.data;
+  }
+};
 export const loginUser = async (info) => {
   try {
     const { data } = await axios.post(userAPI + '/login', info);

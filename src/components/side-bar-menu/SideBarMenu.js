@@ -42,6 +42,12 @@ export const SideBarMenu = () => {
               <i className="fa-solid fa-credit-card"></i> Payment
             </Link>
           </li>
+          <hr />
+          <li>
+            <Link className="menu-item" to="/registration">
+              <i className="fa-solid fa-user-plus"></i> New Admin
+            </Link>
+          </li>
         </ul>
       </div>
     </div>

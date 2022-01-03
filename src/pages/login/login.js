@@ -81,8 +81,6 @@ const Login = () => {
             Login
           </Button>
         </Form>
-
-        <a href="/registration">Register now</a>
       </Card>
     </div>
   );
