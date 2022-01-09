@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Form,
-  Card,
-  InputGroup,
-  Button,
-  Alert,
-  Spinner,
-} from 'react-bootstrap';
+import { Form, InputGroup, Button, Alert, Spinner } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { userRegister } from '../admin-auth-slice/userAction';
 import { AdminLayout } from '../layout/AdminLayout';

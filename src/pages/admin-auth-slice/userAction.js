@@ -5,6 +5,7 @@ import {
   logoutUser,
   updateUserProfile,
   getUser,
+  updateUserPassword,
 } from '../../api/userAPI';
 import {
   requestPending,
@@ -16,6 +17,7 @@ import {
   profileUpdateSuccess,
   userLogoutSuccess,
   autoLoginPending,
+  passwordUpdateSuccess,
 } from './userSlice';
 import { getNewAccessJWT, updateNewAccessJWT } from '../../api/tokenAPI';
 
@@ -124,4 +126,21 @@ export const updateProfileUser = (userInfo) => async (dispatch) => {
     }
   }
   dispatch(profileUpdateSuccess(data));
+};
+export const updatePasswordUser = (passInfo) => async (dispatch) => {
+  dispatch(requestPending());
+  const data = await updateUserPassword(passInfo);
+
+  if (data?.message === 'jwt expired') {
+    // request for new accessjWT
+
+    const token = await updateNewAccessJWT();
+    // then re-call the funciton to refetch teh data
+    if (token) {
+      return dispatch(updatePasswordUser(passInfo));
+    } else {
+      dispatch(userLogout());
+    }
+  }
+  dispatch(passwordUpdateSuccess(data));
 };

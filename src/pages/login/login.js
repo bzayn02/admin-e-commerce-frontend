@@ -12,8 +12,9 @@ const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const { isLoggedIn, isPending, isAutoLoginPending, userLoginResp } =
-    useSelector((state) => state.user);
+  const { isLoggedIn, isPending, userLoginResp } = useSelector(
+    (state) => state.user
+  );
 
   const [loginInfo, setLoginInfo] = useState(initialState);
 
@@ -37,9 +38,6 @@ const Login = () => {
 
     dispatch(adminLogin(loginInfo));
   };
-  // if (isAutoLoginPending) {
-  //   return <Spinner variant="primary" animation="border" />;
-  // }
 
   return (
     <div className="register-page mb-5">

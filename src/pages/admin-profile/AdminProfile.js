@@ -15,7 +15,7 @@ const AdminProfile = () => {
     if (!userInfo._id) {
       dispatch(fetchUser());
     }
-  }, []);
+  }, [dispatch, userInfo._id]);
   return (
     <div>
       <AdminLayout>

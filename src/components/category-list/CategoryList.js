@@ -8,14 +8,10 @@ import { EditCatForm } from '../category-form/EditCatForm';
 
 export const CategoryList = () => {
   const dispatch = useDispatch();
-  const { categories, categoryResponse } = useSelector(
-    (state) => state.category
-  );
+  const { categories } = useSelector((state) => state.category);
 
   useEffect(() => {
     dispatch(fetchCat());
-
-    // return () => categoryResponse?.status && dispatch(catRespReset());
   }, [dispatch]);
 
   const handleOnEdit = (cat) => {

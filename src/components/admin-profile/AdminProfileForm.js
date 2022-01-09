@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Form, InputGroup, Spinner } from 'react-bootstrap';
+import {
+  Alert,
+  Button,
+  Form,
+  InputGroup,
+  ListGroup,
+  Spinner,
+} from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { updateProfileUser } from '../../pages/admin-auth-slice/userAction';
+import {
+  updateProfileUser,
+  updatePasswordUser,
+} from '../../pages/admin-auth-slice/userAction';
 
 const initialProfileState = {
   fname: '',
@@ -14,11 +24,14 @@ const initialProfileState = {
   gender: '',
 };
 
+// Update user profile
 export const AdminProfileForm = () => {
   const dispatch = useDispatch();
 
   const [adminProfile, setAdminProfile] = useState(initialProfileState);
-  const { userInfo, isPending } = useSelector((state) => state.user);
+  const { userInfo, isPending, userUpdateResp } = useSelector(
+    (state) => state.user
+  );
 
   useEffect(() => {
     setAdminProfile(userInfo);
@@ -34,7 +47,6 @@ export const AdminProfileForm = () => {
       userInfo.address !== address
     ) {
       if (window.confirm('Are you sure you want to update the info?')) {
-        console.log('To do call api to update the store. ');
         const update = { email, phone, address };
         dispatch(updateProfileUser(update));
       }
@@ -56,22 +68,20 @@ export const AdminProfileForm = () => {
       <h2 className="text-center">Update Profile</h2>
       <hr />
       {isPending && <Spinner variant="primary" animation="border" />}
-      {/* {userRegisterResponse?.message && (
-          <Alert
-            variant={
-              userRegisterResponse?.status === 'success' ? 'success' : 'danger'
-            }
-          >
-            {userRegisterResponse?.message}
-          </Alert> */}
-      {/* )} */}
+      {userUpdateResp?.message && (
+        <Alert
+          variant={userUpdateResp?.status === 'success' ? 'success' : 'danger'}
+        >
+          {userUpdateResp?.message}
+        </Alert>
+      )}
+
       <Form onSubmit={handleOnSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>First Name *</Form.Label>
           <Form.Control
             name="fname"
             value={adminProfile.fname}
-            // onChange={handleOnChange}
             placeholder="Sam"
             required
             disabled
@@ -82,7 +92,6 @@ export const AdminProfileForm = () => {
           <Form.Control
             name="lname"
             value={adminProfile.lname}
-            // onChange={handleOnChange}
             placeholder="Smith"
             required
             disabled
@@ -175,27 +184,107 @@ export const AdminProfileForm = () => {
     </div>
   );
 };
+
+const initialPassword = {
+  currentPassword: '',
+  password: '',
+  confirmPassword: '',
+};
+
+const passErrorInitial = {
+  isMatched: false,
+  isLengthy: false,
+  hasLowerCase: false,
+  hasUpperCase: false,
+  hasNumber: false,
+  hasSpecialChar: false,
+};
+
+// Update user password
 export const AdminPasswordResetForm = () => {
   const dispatch = useDispatch();
-  const { userInfo, isPending } = useSelector((state) => state.user);
+
+  const [updatePass, setUpdatePass] = useState(initialPassword);
+  const [passError, setPassError] = useState(passErrorInitial);
+  const { isPending, userUpdateResp } = useSelector((state) => state.user);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
+
+    const { currentPassword, password } = updatePass;
+    dispatch(updatePasswordUser({ currentPassword, password }));
   };
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
+
+    let isMatched = false;
+    if (name === 'password') {
+      setPassError({
+        ...passError,
+        isMatched: updatePass.confirmPassword === value,
+      });
+    }
+    if (name === 'confirmPassword') {
+      isMatched = updatePass.password === value;
+      const isLengthy = value.length >= 8;
+      const hasLowerCase = /[a-z]/.test(value);
+      const hasUpperCase = /[A-Z]/.test(value);
+      const hasNumber = /[0-9]/.test(value);
+      const hasSpecialChar = /[!, @, #, $, %,^, *, (, &, /, ), _, +]/.test(
+        value
+      );
+
+      setPassError({
+        ...passError,
+        isMatched,
+        isLengthy,
+        hasNumber,
+        hasLowerCase,
+        hasUpperCase,
+        hasSpecialChar,
+      });
+    }
+
+    setUpdatePass({
+      ...updatePass,
+      [name]: value,
+    });
   };
+
+  console.log(passError);
+
   return (
     <div>
+      {isPending && <Spinner variant="primary" animation="border" />}
+      {userUpdateResp?.message && (
+        <Alert
+          variant={userUpdateResp?.status === 'success' ? 'success' : 'danger'}
+        >
+          {userUpdateResp?.message}
+        </Alert>
+      )}
       <Form onSubmit={handleOnSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Current Password *</Form.Label>
+          <Form.Control
+            name="currentPassword"
+            onChange={handleOnChange}
+            type="password"
+            minLength="8"
+            placeholder="Enter your current password."
+            required
+          />
+        </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Password *</Form.Label>
           <Form.Control
             name="password"
             onChange={handleOnChange}
             type="password"
-            placeholder="secret"
+            minLength="8"
+            maxLength="25"
+            placeholder="Enter the new password."
             required
           />
         </Form.Group>
@@ -205,12 +294,48 @@ export const AdminPasswordResetForm = () => {
             type="password"
             required
             name="confirmPassword"
+            minLength="8"
+            maxLength="25"
+            placeholder="Confirm your new password."
             onChange={handleOnChange}
           />
           {/* {passwordError && <Alert variant="danger">{passwordError}</Alert>} */}
         </Form.Group>
+
+        <ListGroup>
+          <ListGroup.Item variant={passError.isMatched ? 'success' : 'danger'}>
+            Password matches
+          </ListGroup.Item>
+          <ListGroup.Item variant={passError.isLengthy ? 'success' : 'danger'}>
+            Must be at least 8 characters
+          </ListGroup.Item>
+          <ListGroup.Item variant={passError.hasNumber ? 'success' : 'danger'}>
+            Must include number
+          </ListGroup.Item>
+          <ListGroup.Item
+            variant={passError.hasUpperCase ? 'success' : 'danger'}
+          >
+            Must include upper case
+          </ListGroup.Item>
+          <ListGroup.Item
+            variant={passError.hasLowerCase ? 'success' : 'danger'}
+          >
+            Must include lower case
+          </ListGroup.Item>
+          <ListGroup.Item
+            variant={passError.hasSpecialChar ? 'success' : 'danger'}
+          >
+            Must include at least one of the following characters i.e. ! @ # $ %
+            ^ * ( & / ) _ +{' '}
+          </ListGroup.Item>
+        </ListGroup>
         <div className="d-grid gap-2">
-          <Button variant="warning" type="submit" size="lg">
+          <Button
+            variant="warning"
+            type="submit"
+            size="lg"
+            disabled={Object.values(passError).includes(false)}
+          >
             Update Password
           </Button>
         </div>
