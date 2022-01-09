@@ -29,3 +29,18 @@ export const updateNewAccessJWT = async () => {
     return false;
   }
 };
+
+export const requestOTP = async (email) => {
+  try {
+    if (!email) {
+      return false;
+    }
+    const { data } = await axios.post(tokenAPI + '/request-otp', { email });
+    return data;
+  } catch (error) {
+    return {
+      status: 'error',
+      message: error.message,
+    };
+  }
+};

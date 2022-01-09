@@ -206,7 +206,9 @@ export const AdminPasswordResetForm = () => {
 
   const [updatePass, setUpdatePass] = useState(initialPassword);
   const [passError, setPassError] = useState(passErrorInitial);
-  const { isPending, userUpdateResp } = useSelector((state) => state.user);
+  const { isPending, userUpdateResp, passwordUpdateResp } = useSelector(
+    (state) => state.user
+  );
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -257,11 +259,13 @@ export const AdminPasswordResetForm = () => {
   return (
     <div>
       {isPending && <Spinner variant="primary" animation="border" />}
-      {userUpdateResp?.message && (
+      {passwordUpdateResp?.message && (
         <Alert
-          variant={userUpdateResp?.status === 'success' ? 'success' : 'danger'}
+          variant={
+            passwordUpdateResp?.status === 'success' ? 'success' : 'danger'
+          }
         >
-          {userUpdateResp?.message}
+          {passwordUpdateResp?.message}
         </Alert>
       )}
       <Form onSubmit={handleOnSubmit}>

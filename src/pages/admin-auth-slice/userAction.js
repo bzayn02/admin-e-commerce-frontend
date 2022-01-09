@@ -18,8 +18,13 @@ import {
   userLogoutSuccess,
   autoLoginPending,
   passwordUpdateSuccess,
+  resetPassResponse,
 } from './userSlice';
-import { getNewAccessJWT, updateNewAccessJWT } from '../../api/tokenAPI';
+import {
+  getNewAccessJWT,
+  updateNewAccessJWT,
+  requestOTP,
+} from '../../api/tokenAPI';
 
 export const userRegister = (newUser) => async (dispatch) => {
   dispatch(requestPending());
@@ -143,4 +148,10 @@ export const updatePasswordUser = (passInfo) => async (dispatch) => {
     }
   }
   dispatch(passwordUpdateSuccess(data));
+};
+export const requestPassResetOTP = (email) => async (dispatch) => {
+  dispatch(requestPending());
+  const data = await requestOTP(email);
+
+  dispatch(resetPassResponse(data));
 };

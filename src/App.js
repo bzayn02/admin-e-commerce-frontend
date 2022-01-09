@@ -13,6 +13,7 @@ import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import EmailVerification from './pages/email-verification/EmailVerification';
 import { PrivateRoute } from './components/private-route/PrivateRoute';
+import ResetPassword from './pages/password-reset/ResetPassword.js';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           </PrivateRoute>
 
           <Route path="/email-verification" children={<EmailVerification />} />
+          <Route path="/reset-password" children={<ResetPassword />} />
 
           <Route path="/" children={<Login />} />
           <Route path="*" children={<PageNotFound />} />
