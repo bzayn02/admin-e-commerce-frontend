@@ -10,6 +10,7 @@ const initialState = {
   isAutoLoginPending: false,
   showResetPasswordForm: false,
   resetPasswordResponse: {},
+  passwordResettingEmail: '',
 };
 
 const userSlice = createSlice({
@@ -60,8 +61,9 @@ const userSlice = createSlice({
     },
     resetPassResponse: (state, { payload }) => {
       state.isPending = false;
-      state.resetPasswordResponse = payload;
-      state.showResetPasswordForm = payload.status === 'success';
+      state.resetPasswordResponse = payload.data;
+      state.passwordResettingEmail = payload.email;
+      state.showResetPasswordForm = payload.data.status === 'success';
     },
     requestFail: (state, { payload }) => {
       state.isPending = false;

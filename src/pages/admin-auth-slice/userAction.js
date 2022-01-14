@@ -6,6 +6,7 @@ import {
   updateUserProfile,
   getUser,
   updateUserPassword,
+  resetForgetPassword,
 } from '../../api/userAPI';
 import {
   requestPending,
@@ -153,5 +154,11 @@ export const requestPassResetOTP = (email) => async (dispatch) => {
   dispatch(requestPending());
   const data = await requestOTP(email);
 
-  dispatch(resetPassResponse(data));
+  dispatch(resetPassResponse({ data, email }));
+};
+export const resetPasswordAction = (passObj) => async (dispatch) => {
+  dispatch(requestPending());
+  const data = await resetForgetPassword(passObj);
+
+  dispatch(resetPassResponse({ data }));
 };

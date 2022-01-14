@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Card, Form, Spinner } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';
 import { requestPassResetOTP } from '../../pages/admin-auth-slice/userAction';
-import { switchLoginResetPassForm } from '../../pages/admin-auth-slice/userSlice';
 
 const PasswordResetForm = () => {
   const dispatch = useDispatch();
@@ -58,17 +57,7 @@ const PasswordResetForm = () => {
             value={email}
           />
         </Form.Group>
-        {/* <Form.Group className="mb-3">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            name="password"
-            type="password"
-            placeholder="secret"
-            required
-            onChange={handleOnChange}
-            value={loginInfo.password}
-          />
-        </Form.Group> */}
+
         <Button variant="primary" type="submit">
           Request OTP
         </Button>

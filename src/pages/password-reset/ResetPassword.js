@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { ForgotPasswordResetForm } from '../../components/password-reset/ForgotPasswordResetForm';
 
 import PasswordResetForm from '../../components/password-reset-form/PasswordResetForm';
 
@@ -7,7 +8,7 @@ const ResetPassword = () => {
   return (
     <div className="register-page mb-5">
       {showResetPasswordForm ? (
-        'show password resetting form'
+        <ForgotPasswordResetForm />
       ) : (
         <PasswordResetForm />
       )}

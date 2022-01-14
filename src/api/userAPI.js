@@ -67,6 +67,15 @@ export const updateUserPassword = async (passInfo) => {
     return error?.response?.data;
   }
 };
+export const resetForgetPassword = async (passInfo) => {
+  try {
+    const { data } = await axios.post(userAPI + '/reset-password', passInfo);
+    return data;
+  } catch (error) {
+    console.log(error);
+    return { status: 'error', message: error.message };
+  }
+};
 export const loginUser = async (info) => {
   try {
     const { data } = await axios.post(userAPI + '/login', info);
