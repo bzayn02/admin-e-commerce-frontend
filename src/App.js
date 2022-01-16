@@ -1,5 +1,6 @@
 import Register from './pages/register/Register.js';
 import Product from './pages/product/Product';
+import NewProduct from './pages/product/NewProduct';
 import Customer from './pages/customer/Customer';
 import Payment from './pages/payment/Payment';
 import Order from './pages/order/Order';
@@ -26,8 +27,11 @@ function App() {
           <PrivateRoute path="/categories">
             <Category />
           </PrivateRoute>
-          <PrivateRoute path="/products">
+          <PrivateRoute exact path="/products">
             <Product />
+          </PrivateRoute>
+          <PrivateRoute exact path="/products/new">
+            <NewProduct />
           </PrivateRoute>
           <PrivateRoute path="/orders">
             <Order />

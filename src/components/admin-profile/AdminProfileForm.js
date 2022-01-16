@@ -206,9 +206,7 @@ export const AdminPasswordResetForm = () => {
 
   const [updatePass, setUpdatePass] = useState(initialPassword);
   const [passError, setPassError] = useState(passErrorInitial);
-  const { isPending, userUpdateResp, passwordUpdateResp } = useSelector(
-    (state) => state.user
-  );
+  const { isPending, passwordUpdateResp } = useSelector((state) => state.user);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();

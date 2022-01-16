@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Alert, Button, Card, Form, Spinner } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';
 import { adminLogin, autoLogin } from '../../pages/admin-auth-slice/userAction';
-import { switchLoginResetPassForm } from '../../pages/admin-auth-slice/userSlice';
 
 const initialState = {
   email: 'a@gmail.com',
