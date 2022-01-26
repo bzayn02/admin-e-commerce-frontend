@@ -9,7 +9,11 @@ const prodAPI = rootUrl + '/products';
 export const getProduct = async (slug) => {
   try {
     const urlEndPoint = slug ? `${prodAPI}/${slug}` : prodAPI;
-    const { data } = await axios.get(urlEndPoint);
+    const { data } = await axios.get(urlEndPoint, {
+      headers: {
+        authorization: window.sessionStorage.getItem('accessJWT'),
+      },
+    });
     return data;
   } catch (error) {
     console.log(error);
@@ -18,7 +22,24 @@ export const getProduct = async (slug) => {
 };
 export const addProduct = async (prodObj) => {
   try {
-    const { data } = await axios.post(prodAPI, prodObj);
+    const { data } = await axios.post(prodAPI, prodObj, {
+      headers: {
+        authorization: window.sessionStorage.getItem('accessJWT'),
+      },
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error?.response?.data;
+  }
+};
+export const deleteAProduct = async (_id) => {
+  try {
+    const { data } = await axios.delete(prodAPI + '/' + _id, {
+      headers: {
+        authorization: window.sessionStorage.getItem('accessJWT'),
+      },
+    });
     return data;
   } catch (error) {
     console.log(error);

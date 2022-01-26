@@ -1,21 +1,41 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Table } from 'react-bootstrap';
-import { fetchProducts } from '../../pages/product/ProductAction';
+import { Alert, Button, Spinner, Table } from 'react-bootstrap';
+import {
+  fetchProducts,
+  deleteProduct,
+} from '../../pages/product/ProductAction';
 
 export const ProductTable = () => {
   const dispatch = useDispatch();
-  const { productList } = useSelector((state) => state.product);
+  const { productList, productResponse, isPending } = useSelector(
+    (state) => state.product
+  );
 
   useEffect(() => {
     !productList?.length && dispatch(fetchProducts());
   }, [dispatch]);
+
+  const handleOnDelete = (_id) => {
+    if (window.confirm('Are you sure you want to delete the product?')) {
+      _id && dispatch(deleteProduct(_id));
+    }
+  };
   return (
     <div>
+      {isPending && <Spinner variant="info" animation="border"></Spinner>}
+      {productResponse.message && (
+        <Alert
+          variant={productResponse.status === 'success' ? 'success' : 'danger'}
+        >
+          {productResponse.message}
+        </Alert>
+      )}
       <Table striped bordered hover size="sm" className="text-center">
         <thead>
           <tr>
             <th>#</th>
+            <th>Thumbnail</th>
             <th>STATUS</th>
             <th>NAME</th>
             <th>PRICE</th>
@@ -32,6 +52,9 @@ export const ProductTable = () => {
             productList.map((row, i) => (
               <tr key={row._id}>
                 <td>{i + 1}</td>
+                <td>
+                  <img src={row?.images[0]} alt={row.title} width="100px" />
+                </td>
                 <td>ACTIVE</td>
                 <td className="text-start">{row.title}</td>
                 <td>${row.price}</td>
@@ -41,7 +64,10 @@ export const ProductTable = () => {
                   </Button>
                 </td>
                 <td>
-                  <Button variant="danger">
+                  <Button
+                    variant="danger"
+                    onClick={() => handleOnDelete(row._id)}
+                  >
                     <i className="fa-solid fa-trash-can"></i>
                   </Button>
                 </td>
