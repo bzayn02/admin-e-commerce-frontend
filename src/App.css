@@ -10,3 +10,8 @@ a {
   margin-top: 20vh;
   box-shadow: -5px 5px 5px 5px rgb(95, 94, 94);
 }
+
+.product-list-category {
+  max-height: 200px;
+  overflow: scroll;
+}

@@ -5,6 +5,7 @@ import {
   fetchProducts,
   deleteProduct,
 } from '../../pages/product/ProductAction';
+import { Link } from 'react-router-dom';
 
 export const ProductTable = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ export const ProductTable = () => {
         <tbody>
           {!productList?.length ? (
             <tr>
-              <td colSpan="6">No Product to show</td>
+              <td colSpan="7">No Product to show</td>
             </tr>
           ) : (
             productList.map((row, i) => (
@@ -55,13 +56,21 @@ export const ProductTable = () => {
                 <td>
                   <img src={row?.images[0]} alt={row.title} width="100px" />
                 </td>
-                <td>ACTIVE</td>
+                <td>
+                  {row.status ? (
+                    <span className="text-success">Online</span>
+                  ) : (
+                    <span className="text-danger">Offline</span>
+                  )}
+                </td>
                 <td className="text-start">{row.title}</td>
                 <td>${row.price}</td>
                 <td>
-                  <Button variant="info">
-                    <i className="fa-solid fa-pen-to-square"></i>
-                  </Button>
+                  <Link to={`/products/edit/${row.slug}`}>
+                    <Button variant="info">
+                      <i className="fa-solid fa-pen-to-square"></i>
+                    </Button>
+                  </Link>
                 </td>
                 <td>
                   <Button

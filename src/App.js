@@ -15,6 +15,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import EmailVerification from './pages/email-verification/EmailVerification';
 import { PrivateRoute } from './components/private-route/PrivateRoute';
 import ResetPassword from './pages/password-reset/ResetPassword.js';
+import EditProduct from './pages/product/EditProduct.js';
 
 function App() {
   return (
@@ -32,6 +33,9 @@ function App() {
           </PrivateRoute>
           <PrivateRoute exact path="/products/new">
             <NewProduct />
+          </PrivateRoute>
+          <PrivateRoute exact path="/products/edit/:slug">
+            <EditProduct />
           </PrivateRoute>
           <PrivateRoute path="/orders">
             <Order />

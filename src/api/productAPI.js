@@ -20,6 +20,7 @@ export const getProduct = async (slug) => {
     return error?.response?.data;
   }
 };
+
 export const addProduct = async (prodObj) => {
   try {
     const { data } = await axios.post(prodAPI, prodObj, {
@@ -33,6 +34,20 @@ export const addProduct = async (prodObj) => {
     return error?.response?.data;
   }
 };
+export const updateProduct = async (prodObj) => {
+  try {
+    const { data } = await axios.put(prodAPI, prodObj, {
+      headers: {
+        authorization: window.sessionStorage.getItem('accessJWT'),
+      },
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error?.response?.data;
+  }
+};
+
 export const deleteAProduct = async (_id) => {
   try {
     const { data } = await axios.delete(prodAPI + '/' + _id, {

@@ -9,7 +9,12 @@ import {
   Spinner,
 } from 'react-bootstrap';
 import { fetchCat } from '../../pages/category/CategoryAction';
-import { addProductAction } from '../../pages/product/ProductAction';
+import {
+  fetchAProduct,
+  updateProductAction,
+} from '../../pages/product/ProductAction';
+import { useParams } from 'react-router-dom';
+import { resetSingleProductSuccess } from '../../pages/product/ProductSlice';
 import { ProductCategoryList } from '../product-category-list/ProductCategoryList';
 
 const initialState = {
@@ -23,30 +28,44 @@ const initialState = {
   quantity: 0,
   description: '',
 };
-export const AddNewProductForm = () => {
+export const EditProductForm = () => {
+  const { slug } = useParams();
   const dispatch = useDispatch();
-  const [product, setProduct] = useState(initialState);
-  const [selectedCats, setSelectedCats] = useState([]);
 
+  const [updateProduct, setUpdateProduct] = useState(initialState);
+  const [selectedCats, setSelectedCats] = useState([]);
+  const [imgToDelete, setImgToDelete] = useState([]);
   const [images, setImages] = useState([]);
 
-  const { isPending, productResponse } = useSelector((state) => state.product);
+  const { categories } = useSelector((state) => state.category);
+  const { isPending, productResponse, selectedProduct } = useSelector(
+    (state) => state.product
+  );
 
   useEffect(() => {
-    dispatch(fetchCat());
-  }, [dispatch]);
+    if (!selectedProduct?._id || slug !== selectedProduct.slug) {
+      dispatch(fetchAProduct(slug));
+      dispatch(fetchCat());
+    }
+    setUpdateProduct(selectedProduct);
+    setSelectedCats(selectedProduct.categories);
+  }, [dispatch, slug, selectedProduct._id, selectedProduct]);
+
   const handleOnChange = (e) => {
     const { checked, name, value } = e.target;
     if (name === 'status') {
-      setProduct({ ...product, status: checked });
+      setUpdateProduct({ ...updateProduct, status: checked });
       return;
     }
     if (name === 'category') {
-      setProduct({ ...product, category: [...product.category, value] });
+      setUpdateProduct({
+        ...updateProduct,
+        category: [value],
+      });
       return;
     }
 
-    setProduct({ ...product, [name]: value });
+    setUpdateProduct({ ...updateProduct, [name]: value });
   };
 
   const handleOnImageSelect = (e) => {
@@ -60,18 +79,35 @@ export const AddNewProductForm = () => {
     // combine the form data and the images as multipart
     const formData = new FormData();
 
-    for (const key in product) {
-      // console.log(key, product[key]);
-      formData.append(key, product[key]);
+    const { createdAt, updatedAt, __v, categories, slug, ...rest } =
+      updateProduct;
+
+    for (const key in rest) {
+      if (key === 'images') {
+        continue;
+      }
+      if (key === 'saleStartDate' || key === 'saleEndDate') {
+        const val = rest[key] ? rest[key] : '';
+        formData.append(key, val);
+        continue;
+      }
+      // console.log(key, rest[key]);
+      formData.append(key, rest[key]);
     }
 
-    // add category list as well
+    // Keep the old images
+    formData.append('existingImages', rest.images);
 
-    formData.append('categories', selectedCats);
-
+    // add new uploaded images
     images.length && [...images].map((img) => formData.append('images', img));
 
-    dispatch(addProductAction(formData));
+    // add categories
+    formData.append('categories', selectedCats);
+
+    // add images to be deleted
+    formData.append('imgToDelete', imgToDelete);
+
+    dispatch(updateProductAction(formData, slug));
 
     window.scrollTo(0, 0);
   };
@@ -86,6 +122,17 @@ export const AddNewProductForm = () => {
       // remove from the state
       const args = selectedCats.filter((catId) => catId !== value);
       setSelectedCats(args);
+    }
+  };
+
+  const handleOnImageDelete = (e) => {
+    const { checked, value } = e.target;
+    console.log(checked, value);
+    if (checked) {
+      setImgToDelete([...imgToDelete, value]);
+    } else {
+      const args = imgToDelete.filter((source) => source !== value);
+      setImgToDelete(args);
     }
   };
 
@@ -104,6 +151,7 @@ export const AddNewProductForm = () => {
           <Form.Check
             type="switch"
             name="status"
+            checked={updateProduct.status}
             id="custom-switch"
             label="Status"
             onChange={handleOnChange}
@@ -114,6 +162,7 @@ export const AddNewProductForm = () => {
           <Form.Label>Title *</Form.Label>
           <Form.Control
             name="title"
+            value={updateProduct.title}
             placeholder="Product Name"
             onChange={handleOnChange}
             required
@@ -125,6 +174,7 @@ export const AddNewProductForm = () => {
           <Form.Label>Price *</Form.Label>
           <Form.Control
             name="price"
+            value={updateProduct.price}
             type="number"
             placeholder="Price"
             onChange={handleOnChange}
@@ -135,6 +185,7 @@ export const AddNewProductForm = () => {
           <Form.Label>Quantity *</Form.Label>
           <Form.Control
             name="quantity"
+            value={updateProduct.quantity}
             type="number"
             placeholder="Quantity"
             onChange={handleOnChange}
@@ -144,13 +195,17 @@ export const AddNewProductForm = () => {
 
         <FormGroup>
           <FormLabel>Select Categories *</FormLabel>
-          <ProductCategoryList handleOnCatSelect={handleOnCatSelect} />
+          <ProductCategoryList
+            selectedCats={selectedCats}
+            handleOnCatSelect={handleOnCatSelect}
+          />
         </FormGroup>
 
         <Form.Group className="mb-3">
           <Form.Label>Sale Price</Form.Label>
           <Form.Control
             name="salePrice"
+            value={updateProduct.salePrice}
             onChange={handleOnChange}
             type="number"
             placeholder="Sale Price"
@@ -160,6 +215,11 @@ export const AddNewProductForm = () => {
           <Form.Label>Sale Start Date</Form.Label>
           <Form.Control
             name="saleStartDate"
+            value={
+              updateProduct.saleStartDate
+                ? updateProduct.saleStartDate?.substring(0, 10)
+                : undefined
+            }
             onChange={handleOnChange}
             type="date"
             placeholder="Sale Start Date"
@@ -169,6 +229,11 @@ export const AddNewProductForm = () => {
           <Form.Label>Sale End Date</Form.Label>
           <Form.Control
             name="saleEndDate"
+            value={
+              updateProduct.saleEndDate
+                ? updateProduct.saleEndDate?.substring(0, 10)
+                : undefined
+            }
             type="date"
             placeholder="Sale End Date"
             onChange={handleOnChange}
@@ -178,6 +243,7 @@ export const AddNewProductForm = () => {
           <Form.Label>Brand</Form.Label>
           <Form.Control
             name="brand"
+            value={updateProduct.brand}
             placeholder="Brand"
             onChange={handleOnChange}
           />
@@ -188,12 +254,34 @@ export const AddNewProductForm = () => {
           <Form.Control
             as="textarea"
             name="description"
+            value={updateProduct.description}
             type="text"
             placeholder="Description"
             onChange={handleOnChange}
             required
           />
         </Form.Group>
+
+        <FormGroup className="mb-3">
+          <Form.Label>Select the images you want to delete.</Form.Label>
+          <div className="d-flex flex-row">
+            {updateProduct?.images &&
+              updateProduct.images.map((imgLink, i) => (
+                <div className="img-thumbnail m-2" key={i}>
+                  <Form.Check
+                    defaultValue={imgLink}
+                    onChange={handleOnImageDelete}
+                  />
+                  <img
+                    className=""
+                    src={imgLink}
+                    alt={updateProduct?.title}
+                    width="150px"
+                  />
+                </div>
+              ))}
+          </div>
+        </FormGroup>
 
         {/* image uploader */}
 
@@ -208,7 +296,7 @@ export const AddNewProductForm = () => {
           />
         </Form.Group>
         <Button variant="primary" type="submit">
-          Add Product
+          Update Product
         </Button>
       </Form>
     </div>
