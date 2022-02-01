@@ -1,7 +1,11 @@
-import React, { useEffect } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Alert, Button, Form, Spinner, Table } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { getPaymentOptions } from '../../pages/payment/paymentAction';
+import {
+  deletePaymentOptionsAction,
+  getPaymentOptions,
+  updatePaymentOptionAction,
+} from '../../pages/payment/paymentAction';
 
 export const PaymentOptionsList = () => {
   const dispatch = useDispatch();
@@ -10,11 +14,35 @@ export const PaymentOptionsList = () => {
     (state) => state.payment
   );
 
+  const handleOnDelete = (_id) => {
+    if (!_id) {
+      return alert('ID missing!');
+    }
+    dispatch(deletePaymentOptionsAction(_id));
+  };
+
   useEffect(() => {
     dispatch(getPaymentOptions());
   }, [dispatch]);
+
+  const handleOnChange = (e) => {
+    const { checked, value } = e.target;
+    console.log(checked, value);
+
+    if (window.confirm('Are you sure you want to change the status?')) {
+      dispatch(updatePaymentOptionAction({ status: checked, _id: value }));
+    }
+  };
   return (
-    <div>
+    <div className="text-center">
+      {isPending && <Spinner variant="primary" animation="border" />}
+      {paymentResponse?.message && (
+        <Alert
+          variant={paymentResponse?.status === 'success' ? 'success' : 'danger'}
+        >
+          {paymentResponse?.message}
+        </Alert>
+      )}
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -31,16 +59,25 @@ export const PaymentOptionsList = () => {
               <tr key={i}>
                 <td>{i + 1}</td>
                 <td>
-                  {row.status ? (
-                    <span className="text-success">Active</span>
-                  ) : (
-                    <span className="text-danger">Inactive</span>
-                  )}
+                  <Form.Check
+                    name="status"
+                    checked={row.status}
+                    type="switch"
+                    onChange={handleOnChange}
+                    defaultValue={row._id}
+                  />
                 </td>
                 <td>{row.name}</td>
                 <td>{row.info}</td>
                 <td>
-                  <Button variant="danger">Delete</Button>
+                  <Button
+                    onClick={() => {
+                      handleOnDelete(row?._id);
+                    }}
+                    variant="danger"
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}

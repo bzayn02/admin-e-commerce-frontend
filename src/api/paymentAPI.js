@@ -18,22 +18,31 @@ export const fetchPaymentOptions = async () => {
   }
 };
 
-// export const updateNewAccessJWT = async () => {
-//   try {
-//     window.sessionStorage.removeItem('accessJWT');
-//     const { accessJWT } = await getNewAccessJWT();
-//     if (accessJWT) {
-//       window.sessionStorage.setItem('accessJWT', accessJWT);
-//     }
-//     return window.sessionStorage.getItem('accessJWT');
-//   } catch (error) {
-//     return false;
-//   }
-// };
-
 export const addPaymentOptions = async (obj) => {
   try {
     const { data } = await axios.post(paymentAPI, obj, {
+      headers: { Authorization: window.sessionStorage.getItem('accessJWT') },
+    });
+    return data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const updatePaymentOptions = async (obj) => {
+  try {
+    const { data } = await axios.patch(paymentAPI, obj, {
+      headers: { Authorization: window.sessionStorage.getItem('accessJWT') },
+    });
+    return data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const deletePaymentOption = async (_id) => {
+  try {
+    const { data } = await axios.delete(paymentAPI + '/' + _id, {
       headers: { Authorization: window.sessionStorage.getItem('accessJWT') },
     });
     return data;

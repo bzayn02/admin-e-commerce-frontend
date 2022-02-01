@@ -16,9 +16,17 @@ const paymentSlice = createSlice({
       state.isPending = false;
       state.paymentResponse = payload;
     },
+    deletePaymentResponseSuccess: (state, { payload = {} }) => {
+      state.isPending = false;
+      state.paymentResponse = payload;
+    },
     getPaymentResponseSuccess: (state, { payload = [] }) => {
       state.isPending = false;
       state.paymentOptions = payload;
+    },
+    resetResponseMessage: (state) => {
+      state.isPending = false;
+      state.paymentResponse = state.paymentResponse.status && {};
     },
     paymentResponseError: (state, { payload }) => {
       state.isPending = false;
@@ -34,6 +42,8 @@ export const {
   paymentResponseSuccess,
   getPaymentResponseSuccess,
   paymentResponseError,
+  resetResponseMessage,
+  deletePaymentResponseSuccess,
 } = actions;
 
 export default reducer;
