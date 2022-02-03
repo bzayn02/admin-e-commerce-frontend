@@ -44,8 +44,8 @@ export const SideBarMenu = () => {
           </li>
           <hr />
           <li>
-            <Link className="menu-item" to="/registration">
-              <i className="fa-solid fa-user-plus"></i> New Admin
+            <Link className="menu-item" to="/admin-users">
+              Admin Users
             </Link>
           </li>
         </ul>

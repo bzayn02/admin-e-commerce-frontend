@@ -16,6 +16,7 @@ import EmailVerification from './pages/email-verification/EmailVerification';
 import { PrivateRoute } from './components/private-route/PrivateRoute';
 import ResetPassword from './pages/password-reset/ResetPassword.js';
 import EditProduct from './pages/product/EditProduct.js';
+import AdminLists from './pages/admin-list/AdminLists.js';
 
 function App() {
   return (
@@ -48,6 +49,9 @@ function App() {
           </PrivateRoute>
           <PrivateRoute path="/payments">
             <Payment />
+          </PrivateRoute>
+          <PrivateRoute path="/admin-users">
+            <AdminLists />
           </PrivateRoute>
           <PrivateRoute path="/registration">
             <Register />
